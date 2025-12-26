@@ -33,7 +33,10 @@
         <div class="time-display">
           {{ formattedCurrentTime }} / {{ formattedDurationDisplay }}
         </div>
-        <div class="seek-bar-container" @click="seek">
+        <div
+          class="seek-bar-container"
+          @pointerdown="onSeekStart"
+        >
           <div class="seek-bar-background"></div>
           <div class="seek-bar-progress" :style="{ width: `${progressPercentage}%` }"></div>
           <div class="seek-bar-handle" :style="{ left: `${progressPercentage}%` }"></div>
@@ -102,6 +105,8 @@ export default {
       if (duration.value === 0) return 0;
       return (currentTime.value / duration.value) * 100;
     });
+    // Seek bar drag state
+    const isSeeking = ref(false);
 
     // Internal variables for WeWeb
     const { value: audioBlob, setValue: setAudioBlob } = wwLib.wwVariable.useComponentVariable({
@@ -376,23 +381,43 @@ try {
       }
     };
 
-    const seek = (event) => {
-      if (isEditing.value || !audioElement.value) return;
-      
-      const container = event.currentTarget;
+    // Helper for seeking by pointer
+    const seekByClientX = (clientX, container) => {
+      if (!audioElement.value || !duration.value) return;
+
       const rect = container.getBoundingClientRect();
-      const clickPosition = (event.clientX - rect.left) / rect.width;
-      
-      if (clickPosition >= 0 && clickPosition <= 1) {
-        const newTime = clickPosition * duration.value;
-        audioElement.value.currentTime = newTime;
-        currentTime.value = newTime;
-        
-        emit('trigger-event', {
-          name: 'seek',
-          event: { currentTime: newTime }
-        });
-      }
+      const ratio = Math.min(Math.max((clientX - rect.left) / rect.width, 0), 1);
+      const newTime = ratio * duration.value;
+
+      audioElement.value.currentTime = newTime;
+      currentTime.value = newTime;
+    };
+
+    // Pointer drag seeking handlers
+    const onSeekStart = (event) => {
+      if (isEditing.value) return;
+
+      isSeeking.value = true;
+      const container = event.currentTarget;
+
+      seekByClientX(event.clientX, container);
+
+      window.addEventListener('pointermove', onSeekMove);
+      window.addEventListener('pointerup', onSeekEnd);
+    };
+
+    const onSeekMove = (event) => {
+      if (!isSeeking.value) return;
+      const container = document.querySelector('.seek-bar-container');
+      if (!container) return;
+
+      seekByClientX(event.clientX, container);
+    };
+
+    const onSeekEnd = () => {
+      isSeeking.value = false;
+      window.removeEventListener('pointermove', onSeekMove);
+      window.removeEventListener('pointerup', onSeekEnd);
     };
 
     const updateVolume = (event) => {
@@ -578,9 +603,10 @@ try {
       // Methods
       toggleRecording,
       togglePlayback,
-      seek,
       updateVolume,
       toggleMute,
+      // Seek bar drag
+      onSeekStart,
       
       // Actions
       startNewRecording,
@@ -741,6 +767,7 @@ try {
   display: flex;
   align-items: center;
   cursor: pointer;
+  touch-action: none;
 }
 
 .seek-bar-background {
