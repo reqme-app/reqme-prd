@@ -161,10 +161,13 @@ try {
   audioChunks.value = [];
   recordingTime.value = 0;
 
-  // 4. MediaRecorder を作成（mp3前提・Safari優先）
-  let mimeType = "audio/mpeg";
+  // 4. MediaRecorder を作成（m4a / AAC 優先・Safari安定）
+  let mimeType = "audio/mp4"; // m4a (AAC)
   if (!MediaRecorder.isTypeSupported(mimeType)) {
-    mimeType = ""; // fallback（ブラウザに任せる）
+    mimeType = "audio/aac";
+  }
+  if (!MediaRecorder.isTypeSupported(mimeType)) {
+    mimeType = ""; // 最終fallback
   }
 
   mediaRecorder.value = mimeType
@@ -206,8 +209,8 @@ try {
     stream.getTracks().forEach((track) => track.stop());
     clearInterval(recordingInterval.value);
 
-    // MP3 Blob で生成
-    const blob = new Blob(audioChunks.value, { type: "audio/mpeg" });
+    // m4a Blob で生成
+    const blob = new Blob(audioChunks.value, { type: "audio/mp4" }); // m4a
 
     // サイズ制限（5MB）
     const MAX_SIZE = 5 * 1024 * 1024;
