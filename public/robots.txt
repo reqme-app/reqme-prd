@@ -1,3 +1,30 @@
-User-agent:*
-Disallow:
-Sitemap: https://a0806ba5-d877-4966-b3d5-207c991d9fa0.weweb-preview.io/sitemap.xml
+User-agent: *
+# 管理画面
+Disallow: /admin-
+
+# 認証・アカウント
+Disallow: /login
+Disallow: /sign-up
+Disallow: /reset-
+Disallow: /change-password
+Disallow: /complete-email
+
+# ユーザー個別
+Disallow: /mypage
+Disallow: /my-request
+Disallow: /notifications
+Disallow: /notification-settings
+Disallow: /setting
+Disallow: /sales
+Disallow: /follow
+Disallow: /delete
+Disallow: /transfer-history
+
+# クリエイター内部
+Disallow: /creator-
+
+# 注文・リクエスト
+Disallow: /request
+Disallow: /request-detail
+
+Sitemap: https://reqme.jp/sitemap.xml
