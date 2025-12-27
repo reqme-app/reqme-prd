@@ -91,13 +91,13 @@
                 "users": false,
                 "orders": true,
                 "review": false,
-                "creator": true,
-                "notifications": true,
+                "creator": false,
+                "notifications": false,
                 "report_categories": false,
-                "user_notifications": true,
-                "v_creator_review_stats": true,
+                "user_notifications": false,
+                "v_creator_review_stats": false,
                 "email_verification_codes": false,
-                "user_profiles_with_creator": true
+                "user_profiles_with_creator": false
             }
         }
     }
