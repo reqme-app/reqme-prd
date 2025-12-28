@@ -1,31 +1,3 @@
-User-agent: *
-
-# Admin
-Disallow: /admin-
-
-# Auth & Account
-Disallow: /login
-Disallow: /sign-up
-Disallow: /reset-
-Disallow: /change-password
-Disallow: /complete-email
-
-# User Pages
-Disallow: /mypage
-Disallow: /my-request
-Disallow: /notifications
-Disallow: /notification-settings
-Disallow: /setting
-Disallow: /sales
-Disallow: /follow
-Disallow: /delete
-Disallow: /transfer-history
-
-# Creator Internal
-Disallow: /creator-
-
-# Orders
-Disallow: /request
-Disallow: /request-detail
-
-Sitemap: https://reqme.jp/sitemap.xml
+User-agent:*
+Disallow:
+Sitemap: https://a0806ba5-d877-4966-b3d5-207c991d9fa0.weweb-preview.io/sitemap.xml
