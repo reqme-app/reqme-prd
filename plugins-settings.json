@@ -89,7 +89,7 @@
             },
             "realtimeTables": {
                 "users": false,
-                "orders": true,
+                "orders": false,
                 "review": false,
                 "creator": false,
                 "notifications": false,
